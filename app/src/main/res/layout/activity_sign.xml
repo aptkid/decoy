@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.match.android.activity.activity_sign"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/user_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="请输入手机号"
+        android:textSize="18sp"
+        android:layout_marginBottom="32dp"
+        android:layout_above="@+id/send_code" />
+    <Button
+        android:id="@+id/send_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textColor="#bbb"
+        android:textSize="18sp"
+        android:clickable="false"
+        android:background="#ddd"
+        android:text="发送验证码"/>
+
+</RelativeLayout>

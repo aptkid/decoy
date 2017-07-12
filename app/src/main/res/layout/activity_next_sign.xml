@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.match.android.activity.activity_nextSign"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请输入4位短信验证码："
+        android:textSize="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/code_1"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="26dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:maxLines="1"
+            />
+        <EditText
+            android:id="@+id/code_2"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="26dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:maxLines="1"
+            />
+        <EditText
+            android:id="@+id/code_3"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="26dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:maxLines="1"
+            />
+        <EditText
+            android:id="@+id/code_4"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="26dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:maxLines="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60s后可重新发送"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/code_check"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="下一步"
+        android:clickable="false"
+        android:textSize="18sp"
+        android:textColor="#bbb"
+        android:background="#ddd"
+        />
+
+</LinearLayout>

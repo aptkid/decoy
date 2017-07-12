@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_menu_information"
+            android:icon="@drawable/account"
+            android:title="个人资料"
+            />
+        <item
+            android:id="@+id/nav_menu_set"
+            android:icon="@drawable/setting"
+            android:title="设置"
+            />
+        <item
+            android:id="@+id/nav_menu_exit"
+            android:icon="@drawable/close"
+            android:title="退出"
+            />
+    </group>
+
+</menu>
