@@ -17,7 +17,7 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget;
+package com.match.android.wheel;
 
 import android.content.Context;
 import android.os.Handler;

@@ -1,4 +1,4 @@
-package com.match.android.util;
+package com.match.android.Utils;
 
 /**
  * Created by Java on 2017/6/20.

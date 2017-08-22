@@ -1,7 +1,8 @@
-package com.match.android.activity;
+package com.match.android.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,9 +98,10 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
                     Log.d("Hello", "handleMessage: ");
                     if (result == SMSSDK.RESULT_COMPLETE){
                         if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){
-                            Toast.makeText(activity_nextSign.this, "验证成功", Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = getSharedPreferences("userData",MODE_PRIVATE).edit();
+                            editor.putString("phoneNumber",phoneNumber);
+                            editor.apply();
                             Intent intent = new Intent(activity_nextSign.this, MainActivity.class);
-                            intent.putExtra("phoneNum", phoneNumber);
                             startActivity(intent);
                             finish();
                         }
@@ -288,7 +290,6 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.code_check:
                 SMSSDK.submitVerificationCode("86", phoneNumber,code);
-                Toast.makeText(this, "验证中", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.resend:
                 //当重新发送按钮点击后，重新发送短信，倒计时重新运行，resend不能再被点击
@@ -300,10 +301,5 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /*
-                Toast.makeText(this, "验证成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this,MainActivity.class);
-                startActivity(intent);
-    */
 
 }

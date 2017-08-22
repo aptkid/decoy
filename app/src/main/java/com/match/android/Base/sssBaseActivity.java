@@ -12,11 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.match.android.Activity.activity_login;
 
-/**
- * Created by 花花不花花 on 2017/5/7.
- */
 
-public class BaseActivity extends AppCompatActivity{
+public class sssBaseActivity extends AppCompatActivity{
 
     private ForceOfflineReceiver receiver;
 

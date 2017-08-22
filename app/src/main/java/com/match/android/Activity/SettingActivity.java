@@ -1,7 +1,8 @@
-package com.zq.myinterfacepictureupload;
+package com.match.android.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,20 +23,26 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.sdk.android.oss.OSS;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.match.android.R;
+import com.match.android.Utils.ACache;
+import com.match.android.Utils.OSSToken;
+import com.match.android.Utils.UploadFile;
+import com.match.android.Utils.UtilFileDB;
+import com.match.android.Utils.UtilImags;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
-import com.zq.myinterfacepictureupload.util.ACache;
-import com.zq.myinterfacepictureupload.util.UtilFileDB;
-import com.zq.myinterfacepictureupload.util.UtilImags;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +53,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Locale;
 
 import okhttp3.Call;
+
 
 /**
  * Created by zq on 2016/6/11.
@@ -57,33 +64,35 @@ import okhttp3.Call;
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     String URL = "url";
-    TextView homeTopName;
     ZQRoundOvalImageView zqRoundOvalImageView;
     PopupWindow pop;
     LinearLayout ll_popup;
-    Intent intent;
     String urlsf = "";
     int img = 1;
     ACache aCache;
+    private String phoneNumber;
+    private String filename;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_setting);
+        SharedPreferences sharedPreferences = getSharedPreferences("userData",MODE_PRIVATE);
+        phoneNumber = sharedPreferences.getString("phoneNumber","");
         initView();
+        Log.d("SettingActivity","onCreate");
     }
 
     private void initView() {
-        homeTopName = (TextView) findViewById(R.id.home_top_name);
-        homeTopName.setText("设置");
+        Log.d("SettingActivity","initView");
         aCache = ACache.get(SettingActivity.this);
         zqRoundOvalImageView = (ZQRoundOvalImageView) findViewById(R.id.my_setting_txlehs);
         zqRoundOvalImageView.setOnClickListener(this);
-        findViewById(R.id.home_tour_close).setOnClickListener(this);
         initData();
     }
 
     private void initData() {
+        Log.d("SettingActivity","initData");
         if (UtilFileDB.SELETEFile(aCache, "stscimage") != null) {
             if (aCache.getAsBitmap("myimg") == null) {
                 getImage(UtilFileDB.LOGINIMGURL(aCache));
@@ -94,15 +103,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void getImage(String url) {
+        Log.d("SettingActivity","getImage");
         OkHttpUtils.get().url(url).tag(this).build().connTimeOut(20000)
                 .readTimeOut(20000).writeTimeOut(20000)
                 .execute(new BitmapCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                    }
+                        Log.d("SettingActivity","getImage_Error");
 
+                    }
                     @Override
                     public void onResponse(Bitmap bitmap, int id) {
+                        Log.d("SettingActivity","getImage_Success");
                         zqRoundOvalImageView.setImageBitmap(bitmap);
                         aCache.put("myimg", bitmap);
                     }
@@ -111,6 +123,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        Log.d("SettingActivity","onClick");
         switch (v.getId()) {
             case R.id.my_setting_txlehs:
                 showPopupWindow();
@@ -118,13 +131,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         SettingActivity.this, R.anim.activity_translate_in));
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 break;
-            case R.id.home_tour_close:
-                intent = new Intent();
-                intent.putExtra("urlimg", urlsf);
-                setResult(img, intent);
-                finish();
-                break;
-
         }
     }
 
@@ -132,6 +138,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
      * 头像提示框
      */
     public void showPopupWindow() {
+        Log.d("SettingActivity","showPopupWindow");
         pop = new PopupWindow(SettingActivity.this);
         View view = getLayoutInflater().inflate(R.layout.item_popupwindows,
                 null);
@@ -165,7 +172,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 Intent picture = new Intent(
                         Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(picture, 2);
                 pop.dismiss();
                 ll_popup.clearAnimation();
@@ -181,6 +188,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("SettingActivity","onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK
                 && null != data) {
@@ -189,13 +197,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 return;
             }
             new DateFormat();
-            String name = DateFormat.format("yyyyMMdd_hhmmss",
-                    Calendar.getInstance(Locale.CHINA)) + ".jpg";
+            String name = "headImage.jpg";
             Bundle bundle = data.getExtras();
             // 获取相机返回的数据，并转换为图片格式
             Bitmap bmp = (Bitmap) bundle.get("data");
             FileOutputStream fout = null;
-            String filename = null;
+            filename = null;
             try {
                 filename = UtilImags.SHOWFILEURL(SettingActivity.this) + "/" + name;
             } catch (IOException e) {
@@ -203,6 +210,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             try {
                 fout = new FileOutputStream(filename);
                 bmp.compress(Bitmap.CompressFormat.JPEG, 100, fout);
+                //上传头像
+                String endpoint = "http://oss.systemsec.top";
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(OSSToken.getId(),OSSToken.getSecret(),OSSToken.getToken());
+                OSS oss = new OSSClient(getApplicationContext(), endpoint, credentialProvider);
+                UploadFile uploadFile = new UploadFile(oss,"huadong2oss",phoneNumber+"/headImage.jpg", filename);
+                uploadFile.uploadData(fout);
             } catch (FileNotFoundException e) {
                 showToastShort("上传失败");
             } finally {
@@ -213,11 +226,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     showToastShort("上传失败");
                 }
             }
+            //上传头像
+            String endpoint = "http://oss.systemsec.top";
+            OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(OSSToken.getId(),OSSToken.getSecret(),OSSToken.getToken());
+            OSS oss = new OSSClient(getApplicationContext(), endpoint, credentialProvider);
+            UploadFile uploadFile = new UploadFile(oss,"huadong2oss",phoneNumber+"/headImage.jpg", filename);
+            uploadFile.resumableUpload();
             zqRoundOvalImageView.setImageBitmap(bmp);
             staffFileupload(new File(filename));
         }
-        if (requestCode == 2 && resultCode == Activity.RESULT_OK
-                && null != data) {
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK && null != data) {
             try {
                 Uri selectedImage = data.getData();
                 String[] filePathColumns = {MediaStore.Images.Media.DATA};
@@ -231,8 +249,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 Bitmap bmp = BitmapFactory.decodeFile(picturePath);
                 // 获取图片并显示
                 zqRoundOvalImageView.setImageBitmap(bmp);
-                saveBitmapFile(UtilImags.compressScale(bmp), UtilImags.SHOWFILEURL(SettingActivity.this) + "/stscname.jpg");
-                staffFileupload(new File(UtilImags.SHOWFILEURL(SettingActivity.this) + "/stscname.jpg"));
+                saveBitmapFile(UtilImags.compressScale(bmp), UtilImags.SHOWFILEURL(SettingActivity.this) + "/headImage.jpg");
+//                staffFileupload(new File(UtilImags.SHOWFILEURL(SettingActivity.this) + "/headImage.jpg"));
+
+                //上传头像
+                String endpoint = "http://oss.systemsec.top";
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(OSSToken.getId(),OSSToken.getSecret(),OSSToken.getToken());
+                OSS oss = new OSSClient(getApplicationContext(), endpoint, credentialProvider);
+                UploadFile uploadFile = new UploadFile(oss,"huadong2oss",phoneNumber+"/headImage.jpg",UtilImags.SHOWFILEURL(SettingActivity.this) + "/headImage.jpg");
+                uploadFile.resumableUpload();
+
             } catch (Exception e) {
                 showToastShort("上传失败");
             }
@@ -240,18 +266,21 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void saveBitmapFile(Bitmap bitmap, String path) {
+        Log.d("SettingActivity","saveBitmapFile");
         File file = new File(path);//将要保存图片的路径
         try {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void staffFileupload(File file) {
+        Log.d("SettingActivity","staffFileupload");
         if (false) {
             showToastShort("网络未连接");
             return;
@@ -262,17 +291,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
                     @Override
                     public void onFailure(HttpException arg0, String arg1) {
-
+                        Log.d("SettingActivity","staffFileupload_onFailure");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
+                        Log.d("SettingActivity","staffFileupload_success");
                         JSONObject jsonobj;
                         try {
                             jsonobj = new JSONObject(arg0.result.toString());
                             String errno = jsonobj.getString("errno");
                             String error = jsonobj.getString("error");
                             if (errno.equals("0") && error.equals("success")) {
+
                                 JSONArray jsonarray = jsonobj.getJSONArray("data");
                                 JSONObject jsonobjq = jsonarray.getJSONObject(0);
                                 urlsf = jsonobjq.getString("url");
@@ -287,9 +318,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                             return;
                         }
                     }
-
                 });
-
     }
 
     /***
@@ -298,6 +327,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
      * @return
      */
     public static final RequestParams MYUPDATEIMG(File file) {
+        Log.d("SettingActivity","MyUpdateImg");
         RequestParams params = new RequestParams();
         params.addBodyParameter("c", "profile");
         params.addBodyParameter("a", "setavatar");

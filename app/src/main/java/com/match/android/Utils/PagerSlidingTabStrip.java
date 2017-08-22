@@ -1,4 +1,4 @@
-package com.match.android.util;
+package com.match.android.Utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

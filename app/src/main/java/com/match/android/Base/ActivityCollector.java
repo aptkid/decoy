@@ -1,4 +1,4 @@
-package com.match.android.base;
+package com.match.android.Base;
 
 import android.app.Activity;
 

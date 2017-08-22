@@ -1,4 +1,4 @@
-package com.zq.myinterfacepictureupload;
+package com.match.android.Activity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,15 +14,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.ImageView;
 
 /**
  * 使用BitmapShader类实现圆形、圆角，椭圆等自定义图片View。
  *
  * @author zhangqie
  */
-public class ZQRoundOvalImageView extends ImageView {
-
+public class ZQRoundOvalImageView extends android.support.v7.widget.AppCompatImageView {
 
     private Paint mPaint;
 
@@ -78,7 +76,10 @@ public class ZQRoundOvalImageView extends ImageView {
         if (mType == TYPE_CIRCLE) {
             mWidth = Math.min(getMeasuredWidth(), getMeasuredHeight());
             mRadius = mWidth / 2;
-            setMeasuredDimension(mWidth, mWidth);
+            //固定大小
+            setMeasuredDimension(500, 500);
+            //自动适配
+//            setMeasuredDimension(mWidth, mWidth);
         }
 
     }

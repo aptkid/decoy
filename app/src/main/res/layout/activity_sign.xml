@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.match.android.activity.activity_sign"
+    tools:context="com.match.android.Activity.activity_sign"
     android:orientation="vertical">
 
     <EditText

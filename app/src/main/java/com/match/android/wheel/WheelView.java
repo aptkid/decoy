@@ -17,14 +17,14 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget;
+package com.match.android.wheel;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mrwujay.cascade.R;
+import com.match.android.R;
 
-import kankan.wheel.widget.adapters.WheelViewAdapter;
+import com.match.android.wheel.adapters.WheelViewAdapter;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;

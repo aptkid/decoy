@@ -1,11 +1,15 @@
 <resources>
 
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#00AAEE</item>
         <item name="colorPrimaryDark">#00AAEE</item>
         <item name="colorAccent">#00AAEE</item>
+    </style>
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
 </resources>

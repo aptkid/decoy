@@ -55,5 +55,10 @@
             android:textSize="16sp"
             android:text="注册"/>
     </RelativeLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="下载文件"
+        android:id="@+id/download"/>
 
 </LinearLayout>

@@ -14,10 +14,11 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget.adapters;
+package com.match.android.wheel.adapters;
 
-import kankan.wheel.widget.WheelAdapter;
 import android.content.Context;
+
+import com.match.android.wheel.WheelAdapter;
 
 /**
  * Adapter class for old wheel adapter (deprecated WheelAdapter class).

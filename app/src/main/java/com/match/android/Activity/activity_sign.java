@@ -1,4 +1,4 @@
-package com.match.android.activity;
+package com.match.android.Activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -105,13 +105,11 @@ public class activity_sign extends AppCompatActivity {
                     int event = msg.arg1;
                     int result = msg.arg2;
                     Object data = msg.obj;
-                    Log.d("Hello", "handleMessage: ");
                     if (result == SMSSDK.RESULT_COMPLETE){
-                        Log.d("HelloHello", "handleMessage: ");
                         if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
-                            Toast.makeText(activity_sign.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
+                            String phoneNumber = userPhoneNumber.getText().toString();
                             Intent intent = new Intent(activity_sign.this, activity_nextSign.class);
-                            intent.putExtra("phoneNumber", userPhoneNumber.getText().toString());
+                            intent.putExtra("phoneNumber", phoneNumber);
                             startActivity(intent);
                         }
                         else{

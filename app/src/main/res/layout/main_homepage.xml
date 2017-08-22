@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.match.android.util.PagerSlidingTabStrip
+    <com.match.android.Utils.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_centerHorizontal="true"></com.match.android.util.PagerSlidingTabStrip>
+        android:layout_centerHorizontal="true"></com.match.android.Utils.PagerSlidingTabStrip>
 
 
     <android.support.v4.view.ViewPager

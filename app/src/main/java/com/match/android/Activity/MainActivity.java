@@ -1,4 +1,4 @@
-package com.match.android.activity;
+package com.match.android.Activity;
 
 import android.os.Bundle;
 import android.os.Handler;

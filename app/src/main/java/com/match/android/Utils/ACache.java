@@ -1,4 +1,4 @@
-package com.zq.myinterfacepictureupload.util;
+package com.match.android.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

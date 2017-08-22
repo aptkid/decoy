@@ -1,4 +1,4 @@
-package com.zq.myinterfacepictureupload.util;
+package com.match.android.Utils;
 
 /**
  * Created by zq on 2016/6/11.

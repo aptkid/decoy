@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.match.android.Fragment.ThingsAround;
-import com.match.android.object.Card;
+import com.match.android.Object.Card;
 import com.match.android.R;
 
 import java.util.ArrayList;

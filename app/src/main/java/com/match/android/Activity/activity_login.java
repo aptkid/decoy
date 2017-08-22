@@ -1,4 +1,4 @@
-package com.match.android.activity;
+package com.match.android.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.match.android.R;
-import com.match.android.util.HttpUtil;
+import com.match.android.Utils.HttpUtil;
 
 import java.io.IOException;
 
@@ -31,6 +31,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
     private EditText password_edit;
     private String account;
     private String passWord;
+    private Button download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +49,30 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         //从本地读取用户信息
         restoreData();
 
+        download = (Button) findViewById(R.id.download);
+        download.setOnClickListener(this);
+
+        //初始化OSS
+
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.login:
-                intentMainActivity();
+                login();
                 break;
             case R.id.forget_password:
                 Toast.makeText(this, "忘记密码", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.sign:
-                Intent intent = new Intent(this,activity_sign_information.class);
+                Intent intent  = new Intent(this,activity_sign_information.class);
+//                Intent intent = new Intent(this,activity_sign.class);
                 startActivity(intent);
+                break;
+            case R.id.download:
+
                 break;
             default:
                 break;
@@ -82,7 +93,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         //构造post请求信息
         RequestBody requestBody = new FormBody.Builder().add("user_name", account).add("user_password", passWord).build();
 
-        HttpUtil.sendOkHttpRequest(address,requestBody, new Callback() {
+        HttpUtil.sendPOSTRequest(address,requestBody, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
@@ -126,14 +137,14 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        SharedPreferences.Editor editor = getSharedPreferences("someData", MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences("userData", MODE_PRIVATE).edit();
         editor.putString("account", account);
         editor.putString("password", passWord);
         editor.apply();
     }
 
     private void restoreData() {
-        SharedPreferences sharePer = getSharedPreferences("someData",MODE_PRIVATE);
+        SharedPreferences sharePer = getSharedPreferences("userData",MODE_PRIVATE);
         String account = sharePer.getString("account", "");
         String password = sharePer.getString("password", "");
         account_edit.setText(account);
@@ -146,4 +157,5 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         intent.putExtra("username",account);
         startActivity(intent);
     }
+
 }

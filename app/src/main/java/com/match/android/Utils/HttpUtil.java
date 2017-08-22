@@ -1,4 +1,4 @@
-package com.match.android.util;
+package com.match.android.Utils;
 
 import android.os.Environment;
 import android.util.Log;
@@ -19,12 +19,17 @@ import okhttp3.RequestBody;
 
 public class HttpUtil {
     private static final MediaType MEDIA_OBJECT_STREAM = MediaType.parse("application/octet-stream");//mdiatype 这个需要和服务端保持一致 你需要看下你们服务器设置的ContentType 是不是这个，他们设置的是哪个 我们要和他们保持一致
-    public static void sendOkHttpRequest(String address,RequestBody newRequestBody,okhttp3.Callback callback){
+    public static void sendPOSTRequest(String address,RequestBody newRequestBody,okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = newRequestBody;
         Request request = new Request.Builder().url(address).post(requestBody).build();
         client.newCall(request).enqueue(callback);
-        Request request1 = new Request.Builder().url(address).post(requestBody).build();
+    }
+
+    public static void sendGETRequest(String address,okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(address).build();
+        client.newCall(request).enqueue(callback);
     }
 
     public static void uploadFile(String address, Callback callback){

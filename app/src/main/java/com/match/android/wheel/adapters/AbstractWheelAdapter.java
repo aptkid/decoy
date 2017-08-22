@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget.adapters;
-
-import java.util.LinkedList;
-import java.util.List;
+package com.match.android.wheel.adapters;
 
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Abstract Wheel adapter.

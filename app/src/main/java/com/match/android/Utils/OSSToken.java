@@ -5,4 +5,34 @@ package com.match.android.Utils;
  */
 
 public class OSSToken {
+
+    private static String id;
+
+    private static String secret;
+
+    private static String token;
+
+    public static String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public static String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

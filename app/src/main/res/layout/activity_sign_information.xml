@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.match.android.activity.activity_sign_information"
+    tools:context="com.match.android.Activity.activity_sign_information"
     android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="注册信息"
         android:textColor="#00AAEE"
-        android:textSize="39sp"
+        android:textSize="29sp"
         android:gravity="center"
-        android:padding="30dp"
+        android:padding="10dp"
         android:id="@+id/textView" />
     <EditText
         android:id="@+id/post_user_username"
@@ -23,25 +24,101 @@
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="28dp" />
-    <EditText
-        android:id="@+id/post_user_password"
+        android:layout_marginTop="2dp" />
+    <!--<TextView-->
+    <!--android:id="@+id/post_user_password"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:text="性别"-->
+    <!--android:layout_below="@+id/post_user_username"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_marginTop="20dp" />-->
+    <LinearLayout
+        android:id="@+id/sex"
+        android:layout_below="@id/post_user_username"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="请输入密码"
-        android:inputType="textPassword"
-        android:layout_below="@+id/post_user_username"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="我是男生"/>
+            <CheckBox
+                android:id="@+id/check_man"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/CustomCheckboxTheme" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="我是女生"/>
+            <CheckBox
+                android:id="@+id/check_woman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/CustomCheckboxTheme"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/sex">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:text="选择家乡"/>
+        <TextView
+            android:id="@+id/hometownLocation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"/>
+        <!--<ImageButton-->
+            <!--android:id="@+id/hometown"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/map"/>-->
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/location">
+        <include layout="@layout/activity_city"></include>
+    </LinearLayout>
     <Button
-        android:id="@+id/post_user_information"
+        android:id="@+id/nextStep"
         android:layout_width="match_parent"
         android:textColor="#ddd"
         android:background="#00AAEE"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:text="立即注册"/>
+        android:layout_below="@id/location"
+        android:text="下一步"/>
 
+</LinearLayout>
 
-</RelativeLayout>

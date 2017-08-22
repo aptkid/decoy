@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package kankan.wheel.widget;
+package com.match.android.wheel;
 
 /**
  * Wheel scrolled listener interface.

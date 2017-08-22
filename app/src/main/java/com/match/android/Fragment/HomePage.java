@@ -15,7 +15,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 import com.match.android.R;
-import com.match.android.util.PagerSlidingTabStrip;
+import com.match.android.Utils.PagerSlidingTabStrip;
 
 import java.lang.reflect.Field;
 
