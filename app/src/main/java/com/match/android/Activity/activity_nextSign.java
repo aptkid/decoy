@@ -19,15 +19,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.match.android.R;
+import com.match.android.Utils.HttpUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class activity_nextSign extends AppCompatActivity implements View.OnClickListener{
 
@@ -67,7 +73,6 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
         initSDK();
         //等待60S可重复发送
         watchTime();
-
     }
 
 
@@ -95,21 +100,44 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
                     int event = msg.arg1;
                     int result = msg.arg2;
                     Object data = msg.obj;
-                    Log.d("Hello", "handleMessage: ");
                     if (result == SMSSDK.RESULT_COMPLETE){
                         if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){
                             SharedPreferences.Editor editor = getSharedPreferences("userData",MODE_PRIVATE).edit();
                             editor.putString("phoneNumber",phoneNumber);
                             editor.apply();
-                            Intent intent = new Intent(activity_nextSign.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
-                            Toast.makeText(activity_nextSign.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    RequestBody requestBody = new FormBody.Builder().add("user_id",phoneNumber).add("rgister_1","1").build();
+                                    HttpUtil.sendPOSTRequest("http://www.9sec.top/fellow_townsman/land_check/api/user_register.php", requestBody, new okhttp3.Callback() {
+                                        @Override
+                                        public void onFailure(Call call, IOException e) {
+                                            Intent intent = new Intent(activity_nextSign.this, activity_sign_information.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onResponse(Call call, Response response) throws IOException {
+                                            String flag = response.body().string();
+                                            if (flag != null){
+                                                Toast.makeText(activity_nextSign.this, "您已注册，系统已为您自动登录", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(activity_nextSign.this, MainActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                Intent intent = new Intent(activity_nextSign.this, activity_sign_information.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+                                    });
+                                }
+                            }).start();
+
+                        } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
                             emptyCode();
-                        }
-                        else {
+                        } else {
                             ((Throwable)data).printStackTrace();
                         }
                     }
@@ -121,9 +149,8 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
                             JSONObject object = new JSONObject(throwable.getMessage());
                             String des = object.optString("detail");
                             int status = object.optInt("status");
-                            Log.d("Hello", "handleMessage: " + object);
                             if (status > 0 && des != null && des != ""){
-                                Toast.makeText(activity_nextSign.this, des, Toast.LENGTH_SHORT).show();
+                                Log.e("sendSmsCode","验证码验证失败");
                             }
 
                         } catch (JSONException e) {
@@ -211,15 +238,15 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
                             check();
                         }
                     }
-                    else{
-                        //模拟删除
-                        if (finalI > 0){
-                            editTexts[finalI -1].requestFocus();
-                        }
-                        inputCount --;
-                        //用于按钮禁用
-                        btDisable();
-                    }
+// else {
+//                        //模拟删除
+//                        if (finalI > 0){
+//                            editTexts[finalI -1].requestFocus();
+//                        }
+//                        inputCount --;
+//                        //用于按钮禁用
+////                        btDisable();
+//                    }
                 }
                 @Override
                 public void afterTextChanged(Editable s) {
@@ -234,7 +261,6 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
         super.onPause();
         if (eventHandler != null){
             SMSSDK.unregisterEventHandler(eventHandler);
-            Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -243,8 +269,6 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
     protected void onResume() {
         super.onResume();
         SMSSDK.registerEventHandler(eventHandler);
-        Log.d("验证码","onResume");
-        Toast.makeText(this, "onResume  ", Toast.LENGTH_SHORT).show();
     }
 
     private void waitPop() {
@@ -261,8 +285,6 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("验证码", "onDestroy: 验证成功");
-        Toast.makeText(this, "验证成功", Toast.LENGTH_SHORT).show();
     }
 
     private void btDisable() {
@@ -277,11 +299,10 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
     private void check() {
         String inputCode = new String();
         code_check.setTextColor(Color.WHITE);
-        code_check.setBackgroundColor(0xffff88aa);
+        code_check.setBackgroundColor(Color.BLUE);
         for (int i = 0; i < EDIT_NUM; i++){
             inputCode += editTexts[i].getText().toString();
         }
-        Toast.makeText(this, inputCode, Toast.LENGTH_SHORT).show();
         code = inputCode;
     }
 
@@ -289,7 +310,13 @@ public class activity_nextSign extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.code_check:
+                check();
+                if (code.length() != 4){
+                    Toast.makeText(this, "请输入正确的验证码", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 SMSSDK.submitVerificationCode("86", phoneNumber,code);
+                Toast.makeText(this, "验证中...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.resend:
                 //当重新发送按钮点击后，重新发送短信，倒计时重新运行，resend不能再被点击

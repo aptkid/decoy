@@ -22,6 +22,7 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+
 public class activity_login extends AppCompatActivity implements View.OnClickListener{
 
     private Button login;
@@ -49,8 +50,8 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
         //从本地读取用户信息
         restoreData();
 
-        download = (Button) findViewById(R.id.download);
-        download.setOnClickListener(this);
+//        download = (Button) findViewById(R.id.download);
+//        download.setOnClickListener(this);
 
         //初始化OSS
 
@@ -67,13 +68,14 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
                 Toast.makeText(this, "忘记密码", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.sign:
-                Intent intent  = new Intent(this,activity_sign_information.class);
-//                Intent intent = new Intent(this,activity_sign.class);
+                Intent intent  = new Intent(this,activity_sign.class);
                 startActivity(intent);
                 break;
-            case R.id.download:
-
-                break;
+//            case R.id.download:
+//                NimUIKit.startP2PSession(NimUIKit.getContext(),"测试");
+//
+//
+//                break;
             default:
                 break;
         }
@@ -152,8 +154,7 @@ public class activity_login extends AppCompatActivity implements View.OnClickLis
     }
 
     private void intentMainActivity(){
-        Log.d("state","登录成功");
-        Intent intent = new Intent(activity_login.this,MainActivity.class);
+        Intent intent = new Intent(activity_login.this,activity_sign.class);
         intent.putExtra("username",account);
         startActivity(intent);
     }

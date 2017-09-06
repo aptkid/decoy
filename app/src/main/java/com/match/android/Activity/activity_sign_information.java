@@ -46,6 +46,7 @@ public class activity_sign_information extends BaseActivity implements OnWheelCh
     private WheelView mViewCity;
     private WheelView mViewDistrict;
     private TextView hometownLocation;
+    private CheckBox cb_man;
 
 
     @Override
@@ -56,17 +57,7 @@ public class activity_sign_information extends BaseActivity implements OnWheelCh
         setUpViews();
         setUpListener();
         setUpData();
-        //判断
-        CheckBox cb_man = (CheckBox) findViewById(R.id.check_man);
-        CheckBox cb_woman = (CheckBox) findViewById(R.id.check_woman);
-        man = cb_man.isChecked();
-        woman = cb_woman.isChecked();
-        if (man){
-            sex = "man";
-        } else if (woman){
-            sex = "woman";
-        }
-        address = "http://192.168.1.106:8080/fellow_townsman/land_check/api/user_register.php";
+        cb_man = (CheckBox) findViewById(R.id.check_man);
         post_username = (EditText) findViewById(R.id.post_user_username);
         hometownLocation = (TextView) findViewById(R.id.hometownLocation);
 //        hometown = (ImageButton) findViewById(R.id.hometown);
@@ -81,6 +72,19 @@ public class activity_sign_information extends BaseActivity implements OnWheelCh
         nextStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                man = cb_man.isChecked();
+                if (man){
+                    sex = "男";
+                } else {
+                    sex = "女";
+                }
+                SharedPreferences.Editor editor = getSharedPreferences("userData",MODE_PRIVATE).edit();
+                editor.putString("username",post_username.getText().toString());
+                editor.putString("sex",sex);
+                editor.putString("hometown_ProvinceName",mCurrentProviceName);
+                editor.putString("hometown_CityName",mCurrentCityName);
+                editor.putString("hometown_DistrictName",mCurrentDistrictName);
+                editor.apply();
                 Intent intent = new Intent(activity_sign_information.this,SettingActivity.class);
 
 //                startActivity(intent);
@@ -100,57 +104,7 @@ public class activity_sign_information extends BaseActivity implements OnWheelCh
         }
     }
 
-    private void post_user_infor() {
-        //保存用户输入的数据
-        SharedPreferences.Editor editor = getSharedPreferences("userInformation",MODE_PRIVATE).edit();
-        editor.putString("username",username);
-        editor.putString("sex",sex);
-        editor.putString("hometown",mCurrentProviceName+mCurrentCityName+mCurrentDistrictName);
-        RequestBody requestBody = new FormBody.Builder().add("user_name", username).add("register_1", "2").build();
-        HttpUtil.sendPOSTRequest(address, requestBody, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(activity_sign_information.this, "网络错误", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String state = response.body().string();
-                if (state.equals("success")) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity_sign_information.this, "注册成功", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Intent intent = new Intent(activity_sign_information.this, activity_login.class);
-                    startActivity(intent);
-                } else if (state.equals("error")) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity_sign_information.this, "注册失败，检查服务器", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity_sign_information.this, "迷之错误", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-            }
-        });
-
-    }
 
     //选择家乡城市
     private void setUpViews() {
@@ -223,6 +177,62 @@ public class activity_sign_information extends BaseActivity implements OnWheelCh
         mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(this, cities));
         mViewCity.setCurrentItem(0);
         updateAreas();
+    }
+
+
+    private void post_user_infor() {
+        //保存用户输入的数据
+        SharedPreferences.Editor editor = getSharedPreferences("userData",MODE_PRIVATE).edit();
+        editor.putString("username",username);
+        editor.putString("sex",sex);
+        editor.putString("hometown_ProvinceName",mCurrentProviceName);
+        editor.putString("hometown_CityName",mCurrentCityName);
+        editor.putString("hometown_DistrictName",mCurrentDistrictName);
+        editor.apply();
+        RequestBody requestBody = new FormBody.Builder().add("user_name", username).add("register_1", "2").build();
+        HttpUtil.sendPOSTRequest(address, requestBody, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity_sign_information.this, "网络错误", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String state = response.body().string();
+                if (state.equals("success")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity_sign_information.this, "注册成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Intent intent = new Intent(activity_sign_information.this, activity_login.class);
+                    startActivity(intent);
+                } else if (state.equals("error")) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity_sign_information.this, "注册失败，检查服务器", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity_sign_information.this, "迷之错误", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+            }
+        });
+
     }
 
 }

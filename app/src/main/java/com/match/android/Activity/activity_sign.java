@@ -49,7 +49,6 @@ public class activity_sign extends AppCompatActivity {
         send_code_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(activity_sign.this, "已向"+userPhoneNumber.getText().toString()+"发送验证码，请注意查收", Toast.LENGTH_SHORT).show();
                 register();
             }
         });
@@ -107,13 +106,10 @@ public class activity_sign extends AppCompatActivity {
                     Object data = msg.obj;
                     if (result == SMSSDK.RESULT_COMPLETE){
                         if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
-                            String phoneNumber = userPhoneNumber.getText().toString();
-                            Intent intent = new Intent(activity_sign.this, activity_nextSign.class);
-                            intent.putExtra("phoneNumber", phoneNumber);
-                            startActivity(intent);
-                        }
-                        else{
-                            ((Throwable)data).printStackTrace();
+                            Log.e("sendSms","Success");
+                        } else {
+                            Log.e("sendSms","Error");
+//                            ((Throwable)data).printStackTrace();
                         }
                     }
                     //如果返回错误结果
@@ -124,7 +120,6 @@ public class activity_sign extends AppCompatActivity {
                             JSONObject object = new JSONObject(throwable.getMessage());
                             String des = object.optString("detail");
                             int status = object.optInt("status");
-                            Log.d("Hello", "handleMessage: " + object);
                             if (status > 0 && des != null && des != ""){
                                 Toast.makeText(activity_sign.this, des, Toast.LENGTH_SHORT).show();
                             }
@@ -157,15 +152,14 @@ public class activity_sign extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                     != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
-            }
-            else{
+            } else{
                 //如果手机号正确且拥有权限那么就发送短信
                 //启动注册信息界面
                     sendSMS(phoneNum);
             }
         } else {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setMessage("请不要输入正确的手机号:");
+            dialog.setMessage("请输入正确的手机号:");
             dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -177,15 +171,17 @@ public class activity_sign extends AppCompatActivity {
     }
 
     //发送短信
-    private void sendSMS(String phone) {
-        final String phoneNum = phone;
+    private void sendSMS(final String phoneNumber) {
         new AlertDialog.Builder(this).setTitle("发送短信")
-                .setMessage("我们将把验证码发送到以下号码:\n"+phoneNum)
+                .setMessage("我们将把验证码发送到以下号码:\n"+phoneNumber)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SMSSDK.getVerificationCode("86", phoneNum);
+                        SMSSDK.getVerificationCode("86", phoneNumber);
                         buttonDisable();
+                        Intent intent = new Intent(activity_sign.this, activity_nextSign.class);
+                        intent.putExtra("phoneNumber",phoneNumber);
+                        startActivity(intent);
                     }
                 }).create().show();
     }

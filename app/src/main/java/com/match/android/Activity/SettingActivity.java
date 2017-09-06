@@ -37,6 +37,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.match.android.R;
 import com.match.android.Utils.ACache;
+import com.match.android.Utils.HttpUtil;
 import com.match.android.Utils.OSSToken;
 import com.match.android.Utils.UploadFile;
 import com.match.android.Utils.UtilFileDB;
@@ -55,6 +56,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 /**
@@ -72,6 +77,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     ACache aCache;
     private String phoneNumber;
     private String filename;
+    private Button complete;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,8 +85,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.my_setting);
         SharedPreferences sharedPreferences = getSharedPreferences("userData",MODE_PRIVATE);
         phoneNumber = sharedPreferences.getString("phoneNumber","");
+        complete = (Button) findViewById(R.id.complete);
+        complete.setOnClickListener(this);
         initView();
-        Log.d("SettingActivity","onCreate");
     }
 
     private void initView() {
@@ -110,7 +117,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         Log.d("SettingActivity","getImage_Error");
-
                     }
                     @Override
                     public void onResponse(Bitmap bitmap, int id) {
@@ -130,6 +136,46 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 ll_popup.startAnimation(AnimationUtils.loadAnimation(
                         SettingActivity.this, R.anim.activity_translate_in));
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+                break;
+            case R.id.complete:
+                final SharedPreferences sharedPreferences = getSharedPreferences("userData",MODE_PRIVATE);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RequestBody requestBody = new FormBody.Builder().add("user_id",sharedPreferences.getString("phoneNumber",""))
+                                .add("user_name",sharedPreferences.getString("username",""))
+                                .add("user_sex",sharedPreferences.getString("sex",""))
+                                .add("user_town_prov",sharedPreferences.getString("hometown_ProvinceName",""))
+                                .add("user_town_city",sharedPreferences.getString("hometown_CityName",""))
+                                .add("user_town_area",sharedPreferences.getString("hometown_DistrictName",""))
+                                .add("user_now_prov",sharedPreferences.getString("Province",""))
+                                .add("user_now_city",sharedPreferences.getString("City",""))
+                                .add("user_now_area",sharedPreferences.getString("hometown_DistrictName",""))
+                                .add("user_long",sharedPreferences.getString("longitude",""))
+                                .add("user_lat",sharedPreferences.getString("latitude",""))
+                                .add("user_head","http://oss.systemsec.top/"+phoneNumber+"/headImage.jpg")
+                                .add("register_1","2").build();
+                        HttpUtil.sendPOSTRequest("http://www.9sec.top/fellow_townsman/land_check/api/user_register.php", requestBody, new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+
+
+                            }
+                        });
+                    }
+                }).start();
+                Log.d("Shared","手机号;"+sharedPreferences.getString("phoneNumber","")+"\n用户名："+sharedPreferences.getString("username","")+"\n性别："+sharedPreferences.getString("sex","")
+                        +"\n家乡地址  省："+sharedPreferences.getString("hometown_ProvinceName","") +" 市："+sharedPreferences.getString("hometown_CityName","")+" 区："+sharedPreferences.getString("hometown_DistrictName","")
+                        +"\n当前地址  省："+sharedPreferences.getString("Province","")+" 市："+sharedPreferences.getString("City","")+" 区："+sharedPreferences.getString("District","")
+                        +"经度："+sharedPreferences.getString("longitude","")+"纬度："+sharedPreferences.getString("latitude",""));
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -342,4 +388,5 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void showToastShort(String string) {
         Toast.makeText(SettingActivity.this, string, Toast.LENGTH_LONG).show();
     }
+
 }

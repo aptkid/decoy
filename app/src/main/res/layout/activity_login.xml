@@ -3,62 +3,88 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_backimage">
+    android:background="@drawable/login_backimage_ss">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="游子"
+        android:text=""
         android:gravity="center"
         android:textSize="50sp"
-        android:textColor="@color/colorPrimary"/>
-    <EditText
-        android:id="@+id/login_account"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:hint="登录名"
-        android:gravity="center"
-        android:inputType="text"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-    <EditText
-        android:id="@+id/login_password"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:inputType="textPassword"
-        android:hint="密码"
-        android:gravity="center"/>
-    <Button
-        android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="登录"
-        android:textColor="#FFF"
-        android:textSize="15sp"
-        android:background="@color/colorPrimary"/>
+        android:textColor="@color/white"/>
+        <!--android:textColor="@color/colorPrimary"-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp">
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:text="登录"
+            android:textColor="#FFF"
+            android:textSize="15sp"
+            android:background="@color/colorPrimary"/>
         <TextView
-            android:id="@+id/forget_password"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            android:textSize="16sp"
-            android:text="忘记密码？"/>
+            android:id="@+id/pading"
+            android:layout_above="@id/login"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+        <EditText
+            android:layout_above="@id/pading"
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
         <TextView
-            android:id="@+id/sign"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:padding="5dp"
-            android:textSize="16sp"
-            android:text="注册"/>
+            android:id="@+id/padding"
+            android:layout_above="@id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+        <EditText
+            android:id="@+id/login_account"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_above="@id/padding"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:hint="登录名"
+            android:gravity="center"
+            android:inputType="text"/>
+
+        <RelativeLayout
+            android:layout_below="@id/login"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <TextView
+                android:id="@+id/forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:text="忘记密码？"/>
+            <TextView
+                android:id="@+id/sign"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:text="注册"/>
+        </RelativeLayout>
+
     </RelativeLayout>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="下载文件"
-        android:id="@+id/download"/>
+
+    <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="下载文件"-->
+        <!--android:id="@+id/download"/>-->
 
 </LinearLayout>
